@@ -11,8 +11,7 @@ import org.junit.Test;
 
 /**
  * Tests the more complex methods of {@link ValueCodeGenerator}.
- * 
- * @author hps
+ * @author Hans-Peter Störr www.stoerr.net
  */
 public class TestValueCodeGenerator {
 
@@ -36,16 +35,19 @@ public class TestValueCodeGenerator {
         assertEquals("java.util.Collections.<Integer> emptySet()", ValueCodeGenerator.makeExpression(set, type, true));
         // this is the actually generated code:
         set = new java.util.TreeSet<Integer>(java.util.Arrays.asList(1, 2, 3, 4));
-        assertEquals("new java.util.TreeSet<Integer>(java.util.Arrays.asList(1, 2, 3, 4))", ValueCodeGenerator.makeExpression(set, type, true));
+        assertEquals("new java.util.TreeSet<Integer>(java.util.Arrays.asList(1, 2, 3, 4))",
+                ValueCodeGenerator.makeExpression(set, type, true));
     }
 
     @Test
     public void testCreateMap() throws Exception {
         final Type type = TestValueCodeGenerator.class.getDeclaredField("map").getGenericType();
         map = java.util.Collections.<Integer, String> emptyMap();
-        assertEquals("java.util.Collections.<Integer, String> emptyMap()", ValueCodeGenerator.makeExpression(map, type, true));
+        assertEquals("java.util.Collections.<Integer, String> emptyMap()",
+                ValueCodeGenerator.makeExpression(map, type, true));
         map = java.util.Collections.<Integer, String> singletonMap(1, "p1");
-        assertEquals("java.util.Collections.<Integer, String> singletonMap(1, \"p1\")", ValueCodeGenerator.makeExpression(map, type, true));
+        assertEquals("java.util.Collections.<Integer, String> singletonMap(1, \"p1\")",
+                ValueCodeGenerator.makeExpression(map, type, true));
         // this is the actually generated code:
         map = new java.util.TreeMap<Integer, String>() {
             /**

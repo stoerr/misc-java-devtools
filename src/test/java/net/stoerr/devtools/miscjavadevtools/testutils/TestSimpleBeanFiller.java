@@ -17,8 +17,7 @@ import org.junit.Test;
 
 /**
  * Test for {@link SimpleBeanFiller}.
- * 
- * @author hps
+ * @author Hans-Peter Störr www.stoerr.net
  */
 public class TestSimpleBeanFiller {
 
@@ -33,9 +32,11 @@ public class TestSimpleBeanFiller {
         assertEquals(
                 "TestSimpleBean [astring=Astring#42, anint=860283939, aninteger=388448704, along=4273966635, adate=Fri Mar 17 21:44:31 CET 2000, acalendar=1159788095000, aboolean=false]",
                 b2.toString());
-        assertEquals("net.stoerr.devtools.miscjavadevtools.testutils.TestSimpleBeanFiller$TestSimpleBean[\n" + "  astring=Astring#42\n" + "  anint=860283939\n"
-                + "  aninteger=388448704\n" + "  along=4273966635\n" + "  adate=Fri Mar 17 21:44:31 CET 2000\n"
-                + "  acalendar=java.util.GregorianCalendar[time=1159788095000]\n" + "  aboolean=false\n]", SimpleBeanFiller.stringRep(b2));
+        assertEquals("net.stoerr.devtools.miscjavadevtools.testutils.TestSimpleBeanFiller$TestSimpleBean[\n"
+                + "  astring=Astring#42\n" + "  anint=860283939\n" + "  aninteger=388448704\n" + "  along=4273966635\n"
+                + "  adate=Fri Mar 17 21:44:31 CET 2000\n"
+                + "  acalendar=java.util.GregorianCalendar[time=1159788095000]\n" + "  aboolean=false\n]",
+                SimpleBeanFiller.stringRep(b2));
     }
 
     private TestSimpleBean makeFilledBean(final int i) {
@@ -132,9 +133,10 @@ public class TestSimpleBeanFiller {
         @Override
         public String toString() {
             return "TestSimpleBean [" + (astring != null ? "astring=" + astring + ", " : "") + "anint=" + anint + ", "
-                    + (aninteger != null ? "aninteger=" + aninteger + ", " : "") + (along != null ? "along=" + along + ", " : "")
-                    + (adate != null ? "adate=" + adate + ", " : "") + (acalendar != null ? "acalendar=" + acalendar.getTimeInMillis() + ", " : "")
-                    + "aboolean=" + aboolean + "]";
+                    + (aninteger != null ? "aninteger=" + aninteger + ", " : "")
+                    + (along != null ? "along=" + along + ", " : "") + (adate != null ? "adate=" + adate + ", " : "")
+                    + (acalendar != null ? "acalendar=" + acalendar.getTimeInMillis() + ", " : "") + "aboolean="
+                    + aboolean + "]";
         }
 
     }

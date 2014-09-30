@@ -12,38 +12,29 @@ import java.util.Map;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 /**
- * Codegenerator to generate assert statements that the contents of a Java Bean
- * are as given in a template. Use
- * AssertionCodeGenerator.printAssertions(somebean) in a unittest and grasp the
- * generated assert statements from standard output.
- * 
- * @author hps
+ * Codegenerator to generate assert statements that the contents of a Java Bean are as given in a template. Use
+ * AssertionCodeGenerator.printAssertions(somebean) in a unittest and grasp the generated assert statements from
+ * standard output.
+ * @author Hans-Peter Störr www.stoerr.net
  */
 public class AssertionCodeGenerator {
 
     /**
-     * Prints assert statements about the properties of a Java Bean to standard
-     * output for cutting and pasting them to a Unittest.
-     * 
-     * @param variablename
-     *            name of the variable that will contain the bean in the code.
-     * @param javabean
-     *            a simple Java Bean
+     * Prints assert statements about the properties of a Java Bean to standard output for cutting and pasting them to a
+     * Unittest.
+     * @param variablename name of the variable that will contain the bean in the code.
+     * @param javabean a simple Java Bean
      */
     public static void printAssertions(final String variablename, final Object javabean) {
         System.out.println(makeAssertions(variablename, javabean));
     }
 
     /**
-     * Generates assert statements about the properties of a Java Bean to standard
-     * output for cutting and pasting them to a Unittest.
-     * 
-     * @param variablename
-     *            name of the variable that will contain the bean in the code.
-     * @param bean
-     *            a simple Java Bean
-     * @return the assert statements. They require import static
-     *         org.junit.Assert.*;
+     * Generates assert statements about the properties of a Java Bean to standard output for cutting and pasting them
+     * to a Unittest.
+     * @param variablename name of the variable that will contain the bean in the code.
+     * @param bean a simple Java Bean
+     * @return the assert statements. They require import static org.junit.Assert.*;
      */
     public static String makeAssertions(final String variablename, final Object bean) {
         if (null == bean) { return "assertNull(" + variablename + ");\n"; }
@@ -70,7 +61,8 @@ public class AssertionCodeGenerator {
             Object value;
             try {
                 value = method.invoke(bean);
-                final String statement = makeStatement(variablename, method.getName(), value, method.getReturnType()) + ";\n";
+                final String statement = makeStatement(variablename, method.getName(), value, method.getReturnType())
+                        + ";\n";
                 if (statement.startsWith("//")) {
                     skipped.append(statement);
                 } else {
@@ -84,8 +76,7 @@ public class AssertionCodeGenerator {
     }
 
     /**
-     * Checks whether a field is transient. It is probably calculated and we do
-     * not need to check it.
+     * Checks whether a field is transient. It is probably calculated and we do not need to check it.
      */
     private static boolean skipField(final Class<?> beanclass, final Method method) {
         String fieldname = method.getName();
@@ -100,7 +91,8 @@ public class AssertionCodeGenerator {
         return false; // can't determine corresponding field
     }
 
-    static String makeStatement(final String variablename, final String methodname, final Object value, final Class<?> valueClazz) {
+    static String makeStatement(final String variablename, final String methodname, final Object value,
+            final Class<?> valueClazz) {
         final String accessor = variablename + "." + methodname + "()";
         final String printvariable = variablename + " + \"\\n\", ";
         if (null == value) { return "assertNull(" + printvariable + accessor + ")"; }
@@ -113,19 +105,21 @@ public class AssertionCodeGenerator {
                 return "assertFalse(" + printvariable + accessor + ")";
             }
         }
-        if (value instanceof java.util.Date) { return "assertEquals(" + printvariable + ((java.util.Date) value).getTime() + "L, " + accessor
-                + ".getTime())"; }
-        if (value instanceof GregorianCalendar) { return "assertEquals(" + printvariable + ((GregorianCalendar) value).getTimeInMillis() + "L, "
-                + accessor + ".getTimeInMillis())"; }
+        if (value instanceof java.util.Date) { return "assertEquals(" + printvariable
+                + ((java.util.Date) value).getTime() + "L, " + accessor + ".getTime())"; }
+        if (value instanceof GregorianCalendar) { return "assertEquals(" + printvariable
+                + ((GregorianCalendar) value).getTimeInMillis() + "L, " + accessor + ".getTimeInMillis())"; }
         if (value instanceof Collection<?>) {
-            if (((Collection<?>) value).isEmpty()) { return "assertTrue(\"\" + " + variablename + " + \"\\n\" + " + accessor + ", " + accessor
-                    + ".isEmpty())"; }
-            return "assertEquals(" + printvariable + '"' + value.toString() + '"' + ", String.valueOf(" + accessor + "))";
+            if (((Collection<?>) value).isEmpty()) { return "assertTrue(\"\" + " + variablename + " + \"\\n\" + "
+                    + accessor + ", " + accessor + ".isEmpty())"; }
+            return "assertEquals(" + printvariable + '"' + value.toString() + '"' + ", String.valueOf(" + accessor
+                    + "))";
         }
         if (value instanceof Map<?, ?>) {
-            if (((Map<?, ?>) value).isEmpty()) { return "assertTrue(\"\" + " + variablename + " + \"\\n\" + " + accessor + ", " + accessor
-                    + ".isEmpty())"; }
-            return "assertEquals(" + printvariable + '"' + value.toString() + '"' + ", String.valueOf(" + accessor + "))";
+            if (((Map<?, ?>) value).isEmpty()) { return "assertTrue(\"\" + " + variablename + " + \"\\n\" + "
+                    + accessor + ", " + accessor + ".isEmpty())"; }
+            return "assertEquals(" + printvariable + '"' + value.toString() + '"' + ", String.valueOf(" + accessor
+                    + "))";
         }
         return "// Not yet implemented: assertions about type " + value.getClass();
     }

@@ -19,24 +19,18 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
- * Utility that fills all attributes Java Beans with predefined values for
- * testing purposes.
- * 
- * @author hps
+ * Utility that fills all attributes Java Beans with predefined values for testing purposes.
+ * @author Hans-Peter Störr www.stoerr.net
  */
 public class SimpleBeanFiller {
 
     private final int perturbation;
 
     /**
-     * Fills a Java Bean with values determined by the property name and the
-     * perturbation.
-     * 
-     * @param bean
-     *            bean to fill, not null.
-     * @param perturbation
-     *            a value that is used to change the values accordingly. Different
-     *            perturbations give different fillings.
+     * Fills a Java Bean with values determined by the property name and the perturbation.
+     * @param bean bean to fill, not null.
+     * @param perturbation a value that is used to change the values accordingly. Different perturbations give different
+     *            fillings.
      * @return bean
      */
     public static <T> T fillBean(final T bean, final int perturbation) {
@@ -45,27 +39,25 @@ public class SimpleBeanFiller {
     }
 
     /**
-     * @param perturbation
-     *            a value that is used to change the values accordingly. Different
-     *            perturbations give different fillings.
+     * @param perturbation a value that is used to change the values accordingly. Different perturbations give different
+     *            fillings.
      */
     public SimpleBeanFiller(final int perturbation) {
         this.perturbation = perturbation;
     }
 
     /**
-     * Fills a Java Bean with values determined by the property name and the
-     * perturbation.
-     * 
+     * Fills a Java Bean with values determined by the property name and the perturbation.
      * @param bean
-     * @deprecated to be independent from further changes please use {@link #beanFillerCode(String, Object)} to generate the
-     *             corresponding code.
+     * @deprecated to be independent from further changes please use {@link #beanFillerCode(String, Object)} to generate
+     *             the corresponding code.
      */
     @Deprecated
     public void fillBean(final Object bean) {
         try {
             for (final Method method : bean.getClass().getMethods()) {
-                if (!Modifier.isPublic(method.getModifiers()) || method.getParameterTypes().length != 1 || !method.getName().startsWith("set")) {
+                if (!Modifier.isPublic(method.getModifiers()) || method.getParameterTypes().length != 1
+                        || !method.getName().startsWith("set")) {
                     continue;
                 }
                 final Object value = perturbedValue(propertyName(method), method.getGenericParameterTypes()[0]);
@@ -80,7 +72,6 @@ public class SimpleBeanFiller {
 
     /**
      * Returns Java code to fill the bean.
-     * 
      * @param bean
      */
     public String beanFillerCode(String varname, final Object bean) {
@@ -89,14 +80,15 @@ public class SimpleBeanFiller {
             final Method[] methods = bean.getClass().getMethods();
             Arrays.sort(methods, METHODNAMECOMPARATOR);
             for (final Method method : methods) {
-                if (!Modifier.isPublic(method.getModifiers()) || method.getParameterTypes().length != 1 || !method.getName().startsWith("set")) {
+                if (!Modifier.isPublic(method.getModifiers()) || method.getParameterTypes().length != 1
+                        || !method.getName().startsWith("set")) {
                     continue;
                 }
 
                 final Type type = method.getGenericParameterTypes()[0];
                 final Object value = perturbedValue(propertyName(method), type);
-                buf.append(varname).append(".").append(method.getName()).append('(').append(ValueCodeGenerator.makeExpression(value, type, true))
-                        .append(");\n");
+                buf.append(varname).append(".").append(method.getName()).append('(').append(
+                        ValueCodeGenerator.makeExpression(value, type, true)).append(");\n");
             }
         } catch (final RuntimeException e) {
             throw e;
@@ -118,7 +110,8 @@ public class SimpleBeanFiller {
         String rep = ReflectionToStringBuilder.toString(bean, ToStringStyle.MULTI_LINE_STYLE);
         rep = rep.replaceAll("@[0-9a-f]{6,8}", "");
         rep = rep.replaceAll("\\r", "");
-        rep = rep.replaceAll("java.util.GregorianCalendar\\[time=(-?[0-9]*),[^\\[\\]]*(\\[[^\\[\\]]*\\[[^\\[\\]]*]])[^\\[\\]]*]?",
+        rep = rep.replaceAll(
+                "java.util.GregorianCalendar\\[time=(-?[0-9]*),[^\\[\\]]*(\\[[^\\[\\]]*\\[[^\\[\\]]*]])[^\\[\\]]*]?",
                 "java.util.GregorianCalendar[time=$1]");
         return rep;
     }
@@ -132,8 +125,7 @@ public class SimpleBeanFiller {
     }
 
     /**
-     * Yields a value of Class clazz that depends on name and perturbation.
-     * Complete with more types as necessary.
+     * Yields a value of Class clazz that depends on name and perturbation. Complete with more types as necessary.
      */
     private Object perturbedValue(final String name, final Type type) {
         final int pseudorandomnumber = Math.abs(1322837333 * hash(name) + 486187739 * perturbation);
@@ -150,13 +142,15 @@ public class SimpleBeanFiller {
             return pseudorandomnumber + (long) Integer.MAX_VALUE;
         } else if (GregorianCalendar.class.equals(type)) {
             final GregorianCalendar cal = new GregorianCalendar(Locale.GERMANY);
-            cal.setTimeInMillis(new java.util.Date(105, 05, 04, 03, 02, 01).getTime() + 1000L * (pseudorandomnumber % 70000000L));
+            cal.setTimeInMillis(new java.util.Date(105, 05, 04, 03, 02, 01).getTime() + 1000L
+                    * (pseudorandomnumber % 70000000L));
             return cal;
 
         } else if (type instanceof Class) {
             final Class<?> clazz = (Class<?>) type;
             if (clazz.isAssignableFrom(Date.class)) {
-                return new Date(new java.util.Date(100, 01, 02, 03, 04, 05).getTime() + 1000L * (pseudorandomnumber % 70000000L));
+                return new Date(new java.util.Date(100, 01, 02, 03, 04, 05).getTime() + 1000L
+                        * (pseudorandomnumber % 70000000L));
             } else if (clazz.isEnum()) {
                 final Object[] values = clazz.getEnumConstants();
                 return values[pseudorandomnumber % values.length];
@@ -193,7 +187,8 @@ public class SimpleBeanFiller {
             }
         }
 
-        throw new IllegalArgumentException("No example generation for type " + type + " implemented. Please extend perturbedValue.");
+        throw new IllegalArgumentException("No example generation for type " + type
+                + " implemented. Please extend perturbedValue.");
     }
 
     /** More sensible hash than {@link String#hashCode()}. */

@@ -15,8 +15,7 @@ import org.junit.Test;
 
 /**
  * Test for {@link AssertionCodeGenerator}.
- * 
- * @author hps
+ * @author Hans-Peter Störr www.stoerr.net
  */
 public class TestAssertionCodeGenerator {
 
@@ -26,10 +25,13 @@ public class TestAssertionCodeGenerator {
         final TestSimpleBean bean = new TestSimpleBean();
         final String assertions = AssertionCodeGenerator.makeAssertions("bean", bean);
         // System.out.println(assertions);
-        assertEquals("import static org.junit.Assert.*;\n" + "\n" + "assertNull(bean + \"\\n\", bean.getAcalendar());\n"
+        assertEquals("import static org.junit.Assert.*;\n" + "\n"
+                + "assertNull(bean + \"\\n\", bean.getAcalendar());\n"
                 + "assertNull(bean + \"\\n\", bean.getAdate());\n" + "assertNull(bean + \"\\n\", bean.getAlong());\n"
-                + "assertEquals(bean + \"\\n\", 0, bean.getAnint());\n" + "assertNull(bean + \"\\n\", bean.getAninteger());\n"
-                + "assertNull(bean + \"\\n\", bean.getAstring());\n" + "assertFalse(bean + \"\\n\", bean.isAboolean());\n" + "" + "", assertions);
+                + "assertEquals(bean + \"\\n\", 0, bean.getAnint());\n"
+                + "assertNull(bean + \"\\n\", bean.getAninteger());\n"
+                + "assertNull(bean + \"\\n\", bean.getAstring());\n"
+                + "assertFalse(bean + \"\\n\", bean.isAboolean());\n" + "" + "", assertions);
 
         // the actual generated code comes here:
         assertNull(bean + "\n", bean.getAcalendar());
@@ -54,8 +56,8 @@ public class TestAssertionCodeGenerator {
                 + "assertEquals(bean + \"\\n\", Long.valueOf(4273966635L), bean.getAlong());\n"
                 + "assertEquals(bean + \"\\n\", 860283939, bean.getAnint());\n"
                 + "assertEquals(bean + \"\\n\", Integer.valueOf(388448704), bean.getAninteger());\n"
-                + "assertEquals(bean + \"\\n\", \"Astring#42\", bean.getAstring());\n" + "assertFalse(bean + \"\\n\", bean.isAboolean());\n",
-                assertions);
+                + "assertEquals(bean + \"\\n\", \"Astring#42\", bean.getAstring());\n"
+                + "assertFalse(bean + \"\\n\", bean.isAboolean());\n", assertions);
 
         // the actual generated code comes here:
         assertEquals(bean + "\n", 1159788095000L, bean.getAcalendar().getTimeInMillis());
@@ -84,7 +86,8 @@ public class TestAssertionCodeGenerator {
         final String assertions = AssertionCodeGenerator.makeAssertions("bean", bean);
         // System.out.println(assertions);
         assertEquals("import static org.junit.Assert.*;\n" + "\n" + "assertNull(bean + \"\\n\", bean.getList());\n"
-                + "assertNull(bean + \"\\n\", bean.getMap());\n" + "assertNull(bean + \"\\n\", bean.getSet());\n", assertions);
+                + "assertNull(bean + \"\\n\", bean.getMap());\n" + "assertNull(bean + \"\\n\", bean.getSet());\n",
+                assertions);
 
         // the actual generated code comes here:
         assertNull(bean + "\n", bean.getList());
@@ -108,7 +111,8 @@ public class TestAssertionCodeGenerator {
 
         // the actual generated code comes here:
         assertEquals(bean + "\n", "[List$0#42, List$1#42, List$2#42]", String.valueOf(bean.getList()));
-        assertEquals(bean + "\n", "{1337253675=Map$2#42, 514164281=Map$0#42, 1221775182=Map$1#42}", String.valueOf(bean.getMap()));
+        assertEquals(bean + "\n", "{1337253675=Map$2#42, 514164281=Map$0#42, 1221775182=Map$1#42}",
+                String.valueOf(bean.getMap()));
         assertEquals(bean + "\n", "[A, H, Z]", String.valueOf(bean.getSet()));
     }
 }
